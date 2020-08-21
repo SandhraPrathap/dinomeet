@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'voice.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,8 +31,6 @@ class _VoicecallState extends State<Voicecall> {
                     fontWeight: FontWeight.bold),
               ),
               Container(
-                color: Colors.grey[200],
-                padding: EdgeInsets.all(1),
                 width: 200,
                 child: TextField(
                   maxLength: 24,
@@ -40,10 +41,20 @@ class _VoicecallState extends State<Voicecall> {
                 ),
               ),
               RaisedButton(
-                  child: Text("Join Call"),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: ));
-                  })
+                child: Text("Join Call"),
+                onPressed: () async {
+                  if (callcode.text != "" || callcode.text != null) {
+                    await PermissionHandler()
+                        .requestPermissions([PermissionGroup.microphone]);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VoiceCall(
+                                  Channel: callcode.text,
+                                )));
+                  }
+                },
+              )
             ],
           ),
         ),
@@ -67,7 +78,6 @@ class MyApp extends StatelessWidget {
         // "hot reload" (press "r" in the console where you ran "flutter run",
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
